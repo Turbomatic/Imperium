@@ -10,6 +10,7 @@ if (!isset($_SESSION['recoveryEmail'])) {
 
 include 'helper.control.php';
 require_once '../model/User.php';
+require_once './helper.control.php';
 
 $raw_data = file_get_contents("php://input");
 $data = json_decode($raw_data, true);
@@ -51,29 +52,3 @@ function hasNewPasswordExpired($expiry) {
     return strtotime($expiry) <= time();
 }
 
-function validateNewPassword($newPass, $confirmPass) {
-    $errors = [];
-
-    if (empty($newPass)) {
-        $errors['password'] = "Password is required";
-    } else {
-        if (strlen($newPass) < 8 ||
-            !preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/', $newPass)
-        ) {
-            $errors['password'] = "Password must be at least 8 characters long and contain at least one letter, one number, and one special character.";
-        }
-    }
-
-    if (empty($confirmPass)) {
-        $errors['password_again'] = "Repeated password is required";
-    } else {
-        if ($newPass !== $confirmPass) {
-            $errors['password_again'] = "Passwords do not match.";
-        }
-    }
-    
-    if (!empty($errors)) {
-        echo json_encode($errors);
-        die();
-    }
-}

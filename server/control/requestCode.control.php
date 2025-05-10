@@ -4,12 +4,16 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') die();
 include 'helper.control.php';
 require_once '../model/User.php';
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 $raw_data = file_get_contents("php://input");
 $data = json_decode($raw_data, true);
 
 requestCode($data['email']);
 
-function requestCode($email) {
+function requestCode($email)
+{
     $user = new User();
     $foundUser = $user->getUserByEmail($email);
     if (empty($foundUser)) {
@@ -35,13 +39,14 @@ function requestCode($email) {
     }
 }
 
-function sendMail($receiver, $code) {
+function sendMail($receiver, $code)
+{
     //PHP Mailer Version
     require '../../vendor/autoload.php';
     require '../../config/mailer.config.php';
 
-    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-    
+    $mail = new PHPMailer(true);
+
     try {
         $mail->isSMTP();
         $mail->SMTPAuth = true;
@@ -55,10 +60,10 @@ function sendMail($receiver, $code) {
         $mail->setFrom('no-reply@Imperium.com', 'Imperium');
         $mail->addAddress($receiver);
         $mail->Subject = 'Password Reset Code';
-        $mail->Body = 'Your password reset code is '.$code.'. This code will expire in 5 minutes.';
+        $mail->Body = 'Your password reset code is ' . $code . '. This code will expire in 5 minutes.';
 
         return $mail->send();
     } catch (Exception $e) {
-        echo json_encode(['error'=> $mail->ErrorInfo]);
+        echo json_encode(['error' => $mail->ErrorInfo]);
     }
 }

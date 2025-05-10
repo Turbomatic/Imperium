@@ -62,6 +62,7 @@ function registerUser($name, $surname, $email, $password, $password_again)
             $errors['password_again'] = "Passwords do not match.";
         }
     }
+    
 
     // Check if user exists
     $user = new User();
