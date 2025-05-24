@@ -4,6 +4,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') die();
 include 'helper.control.php';
 require '../model/User.php';
 
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -14,7 +15,8 @@ requestCode($data['email']);
 
 function requestCode($email)
 {
-    $user = new User();
+    require '../../config/db.php';
+    $user = new User($conn);
     $foundUser = $user->getUserByEmail($email);
     if (empty($foundUser)) {
         echo json_encode(['recovery_email' => 'Email not found.']);
@@ -37,6 +39,7 @@ function requestCode($email)
     } else {
         echo json_encode(['recovery_email' => 'Failed to send mail.']);
     }
+    $conn = null;
 }
 
 function sendMail($receiver, $code)

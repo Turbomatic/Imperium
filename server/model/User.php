@@ -1,11 +1,11 @@
 <?php
+
 class User
 {
-    private $conn;
+    private PDO $conn;
 
-    public function __construct()
+    public function __construct(PDO $conn)
     {
-        require '../../config/db.php';
         $this->conn = $conn;
     }
     // Authentication and Identify functions
@@ -75,6 +75,13 @@ class User
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function getUser($id)
+    {
+        $stmt = $this->conn->prepare("SELECT name , email, created_at FROM users WHERE id = :id");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     public function getUserByEmail($email)
     {
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = :email");
@@ -82,23 +89,27 @@ class User
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    public function generateRecoveryToken($email, $code) {
+    public function generateRecoveryToken($email, $code)
+    {
         $expiry = date("Y-m-d H-i-s", time() + 60 * 3); //current time plus 3 minutes
         $stmt = $this->conn->prepare("UPDATE users SET resetCode = ?, resetCodeExpiry = ?, newPasswordExpiry = ? WHERE email = ?");
         return $stmt->execute([$code, $expiry, null, $email]);
     }
-    public function approveResetCode($email) {
+    public function approveResetCode($email)
+    {
         $expiry = date("Y-m-d H-i-s", time() + 60 * 3); //current time plus 3 minutes
         $stmt = $this->conn->prepare("UPDATE users SET resetCode = ?, resetCodeExpiry = ?, newPasswordExpiry = ? WHERE email = ?");
         return $stmt->execute([null, null, $expiry, $email]);
     }
-    public function updatePasswordFromRecovery($email, $password) {
+    public function updatePasswordFromRecovery($email, $password)
+    {
         $hashed = password_hash($password, PASSWORD_BCRYPT);
         $stmt = $this->conn->prepare("UPDATE users SET password = ?, newPasswordExpiry = ? WHERE email = ?");
         return $stmt->execute([$hashed, null, $email]);
     }
 
-    public function getUserByGoogleId($googleId) {
+    public function getUserByGoogleId($googleId)
+    {
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE google_id = :google_id");
         $stmt->bindParam(':google_id', $googleId);
         $stmt->execute();
@@ -117,22 +128,16 @@ class User
             return false;
         }
     }
-    public function updatePassword($userId, $newPassword)
-    {
-        $hashed = password_hash($newPassword, PASSWORD_BCRYPT);
-        $stmt = $this->conn->prepare("UPDATE users SET password = ? WHERE id = ?");
-        return $stmt->execute([$hashed, $userId]);
-    }
 
-    
 
     //Profile Menagement functions
 
     public function updateUser($userId, $newData)
     {
         // Step 1: Get current data
-        $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
-        $stmt->execute([$userId]);
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = :userId");
+        //$stmt->execute([$userId]);
+        $stmt->bindParam(':userId', $userId);
         $currentData = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$currentData) {
@@ -153,7 +158,7 @@ class User
 
         // Step 3: Add user ID to params
         if (empty($fieldsToUpdate)) {
-            return false; 
+            return false;
         }
 
         $params[] = $userId;
@@ -164,19 +169,65 @@ class User
         return $stmt->execute($params);
     }
 
-    public function changePassword($userId, $oldPass, $newPass){
-    // Get user
-    $stmt = $this->conn->prepare("SELECT password FROM users WHERE id = ?");
-    $stmt->execute([$userId]);
-    $user = $stmt->fetch();
+    public function changePassword($userId, $oldPass, $newPass)
+    {
+        // Get user
+        $stmt = $this->conn->prepare("SELECT password FROM users WHERE id = :userId");
+        $stmt->bindParam(':userId', $userId);
+        //$stmt->execute([$userId]);
+        $user = $stmt->fetch();
 
-    if (!$user || !password_verify($oldPass, $user['password'])) {
-        return false; // wrong current password
+        if (!$user || !password_verify($oldPass, $user['password'])) {
+            return false; // wrong current password
+        }
+
+        // Update password
+        $newHash = password_hash($newPass, PASSWORD_DEFAULT);
+        $stmt = $this->conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+        return $stmt->execute([$newHash, $userId]);
     }
 
-    // Update password
-    $newHash = password_hash($newPass, PASSWORD_DEFAULT);
-    $stmt = $this->conn->prepare("UPDATE users SET password = ? WHERE id = ?");
-    return $stmt->execute([$newHash, $userId]);
+    public function getOrderHistory($userId)
+    {
+
+        $stmt = $this->conn->prepare("
+            SELECT 
+                o.id AS order_id,
+                p.name AS product_name,
+                p.image_url,
+                p.description,
+                oi.price,
+                o.status AS action,
+                o.created_at
+            FROM orders o
+            JOIN order_items oi ON o.id = oi.order_id
+            JOIN products p ON oi.product_id = p.id
+            WHERE o.user_id = :userId
+            ORDER BY o.created_at DESC");
+
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getSavedItems($userId)
+    {
+
+        $sql = "
+            SELECT 
+                p.id AS product_id,
+                p.name AS product_name,
+                p.description,
+                p.price,
+                p.image_url,
+                si.saved_at
+            FROM saved_items si
+            JOIN products p ON si.product_id = p.id
+            WHERE si.user_id = :userId
+            ORDER BY si.saved_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['userId' => $userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

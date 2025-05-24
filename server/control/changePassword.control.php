@@ -18,8 +18,8 @@ resetPassword($data['newPass'], $data['confirmPass']);
 
 function resetPassword($newPass, $confirmPass) {
     $email = $_SESSION['recoveryEmail'];
-
-    $user = new User();
+    require '../../config/db.php';
+    $user = new User($conn);
     $foundUser = $user->getUserByEmail($email);
     if (empty($foundUser)) {
         echo json_encode(["password_again" => "Failed to retrieve user data for this email."]);

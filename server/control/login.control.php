@@ -13,13 +13,14 @@ loginUser($data['email'], $data['password']);
 function loginUser($email, $password)
 {
     $errors = [];
-        // Email validation
+    // Email validation
     $email = test_input($email);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = "Invalid email format.";
     }
     // Authenticate
-    $user = new User();
+     require '../../config/db.php';
+    $user = new User($conn);
     $foundUser = $user->getUserByEmail($email);
     if (empty($foundUser)) {
         if (!isset($errors['email'])) {
@@ -47,4 +48,5 @@ function loginUser($email, $password)
     $_SESSION['user_name'] = $foundUser['name'];
 
     echo json_encode(["success" => "Logged in successfully."]);
+    $conn = null;
 }

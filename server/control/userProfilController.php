@@ -1,24 +1,14 @@
 <?php
-require_once "../../config/session.php";
-require "../model/User.php";
+require_once "../config/session.php";
+require "./model/User.php";
 require_once "helper.control.php";
 
 function viewProfile()
 {
+    require '../../config/databa.php';
+    $user = new User($conn);
 
-    $user = new User();
-
-    if (getGoogleUserId()) {
-        $userId = getGoogleUserId();
-        $userData = $user->getUserByGoogleId($userId);
-        if (empty($userData)) {
-            http_response_code(404);
-            echo "User not found";
-            return;
-        } else {
-            echo json_encode($userData);
-        }
-    } else if (getLocalUserId()) {
+    if (getLocalUserId()) {
         $userId = getLocalUserId();
         $userData = $user->getUserById($userId);
         if (empty($userData)) {
@@ -32,6 +22,7 @@ function viewProfile()
         echo "Unauthorized";
         return;
     }
+    $conn = null;
 }
 function updateProfile($postData)
 {
@@ -44,21 +35,10 @@ function updateProfile($postData)
         echo "Unauthorized";
         return;
     }
+    require '../../config/databa.php';
+    $user = new User($conn);
 
-    $user = new User();
-
-    if (getGoogleUserId()) {
-        $userId = getGoogleUserId();
-        $userData = $user->getUserByGoogleId($userId);
-        if (empty($userData)) {
-            http_response_code(404);
-            echo "User not found";
-            return;
-        } else {
-            $user->updateUser($userId, $_POST['name'], $_POST['surname'], $_POST['avatar_url']);
-            echo json_encode($user->getUserByGoogleId($userId));
-        }
-    } else if (getLocalUserId()) {
+    if (getLocalUserId()) {
         $userId = getLocalUserId();
         $userData = $user->getUserById($userId);
         if (empty($userData)) {
@@ -69,11 +49,8 @@ function updateProfile($postData)
             $user->updateUser($userId, $_POST['name'], $_POST['surname'], $_POST['avatar_url']);
             echo json_encode($user->getUserById($userId));
         }
-    } else {
-        http_response_code(401);
-        echo "Unauthorized";
-        return;
     }
+    $conn = null;
 }
 function verifyCurrentPasword()
 {
@@ -92,7 +69,8 @@ function verifyCurrentPasword()
         return;
     }
 
-    $user = new User();
+    require '../../config/databa.php';
+    $user = new User($conn);
     $userData = $user->getUserById($userId);
 
     if (!$userData || !password_verify($currentPassword, $userData['password'])) {
@@ -101,9 +79,11 @@ function verifyCurrentPasword()
     } else {
         echo json_encode(["success" => "Password verified."]);
     }
+    $conn = null;
 }
 
-function changePassword(){
+function changePassword()
+{
 
     startSession();
 
@@ -113,6 +93,7 @@ function changePassword(){
         return;
     }
 
+    $oldPass = $_POST['old_password'] ?? '';
     $newPass = $_POST['new_password'] ?? '';
     $confirmPass = $_POST['confirm_password'] ?? '';
 
@@ -122,12 +103,48 @@ function changePassword(){
         return;
     }
 
-    $user = new User();
-    $success = $user->updatePassword($userId, $newPass);
+    require '../../config/db.php';
+    $user = new User($conn);
+    $success = $user->changePassword($userId, $oldPass, $newPass);
 
     if ($success) {
         echo json_encode(["success" => "Password changed successfully."]);
     } else {
         echo json_encode(["error" => "Failed to update password."]);
     }
+
+    $conn = null;
+}
+
+function getCompleteUserProfile(): ?array
+{
+    $userId = $_SESSION['user_id'] ?? null;
+
+    if (!$userId) {
+        http_response_code(401);
+        echo json_encode(["error" => "Unauthorized"]);
+        return null;
+    }
+
+    require '../config/db.php'; // Make sure the path is correct
+    $user = new User($conn);
+
+    $userData = $user->getUser($userId);
+    if (empty($userData)) {
+        http_response_code(404);
+        echo json_encode(["error" => "User not found"]);
+        return null;
+    }
+
+    // Get related data
+    $orderHistory = $user->getOrderHistory($userId);
+    $savedItems = $user->getSavedItems($userId);
+
+    // Combine into one structured response
+    return [
+        'user' => $userData,
+        'order_history' => $orderHistory,
+        'saved_items' => $savedItems
+    ];
+    $conn = null;
 }

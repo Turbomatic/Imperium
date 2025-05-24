@@ -18,8 +18,8 @@ verifyCode($data['code']);
 
 function verifyCode($code) {
     $email = $_SESSION['recoveryEmail'];
-
-    $user = new User();
+    require '../../config/db.php';
+    $user = new User($conn);
     $foundUser = $user->getUserByEmail($email);
     
     if (empty($foundUser)) {
@@ -49,6 +49,7 @@ function verifyCode($code) {
     } else {
         echo json_encode(['code' => 'Failed to approve code in database.']);
     }
+    $conn = null;
 }
 
 function doesCodeMatch($code, $resetCode) {
