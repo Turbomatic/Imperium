@@ -42,7 +42,7 @@ function showProducts($filters, $category)
     require_once 'view/products.view.php';
     require_once 'products.control.php';
 
-    if($filters) $filters = json_decode($filters, true);
+    if ($filters) $filters = json_decode($filters, true);
     else $filters = ['category' => $category, 'page' => 1, 'sort' => 'popularity', 'order' => 'descending', 'min_price' => 0, 'max_price' => 200000];
     $data = getProducts($filters);
     display_products($data['products'], $data['newFilters']);

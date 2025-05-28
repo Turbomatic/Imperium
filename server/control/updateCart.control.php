@@ -62,12 +62,12 @@ function removeItem($cart, $userId, $postData)
 function addProductToCart($cart, $userId, $postData)
 {
 
-    if (!isset($postData['product_id'])) {
+    if (!isset($postData['productId'])) {
         http_response_code(400);
         return;
     }
 
-    $productId = $postData['product_id'];
+    $productId = $postData['productId'];
     $quantity = $postData['quantity'] ?? 1;
 
     if ($cart->addSavedItemToCart($userId, $productId, $quantity)) {
