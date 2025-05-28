@@ -13,9 +13,11 @@
 }
 .main-section .product-picture-carousel .carousel .carousel-item {
   width: 20%;
+  display: flex;
+  justify-content: center;
 }
 .main-section .product-picture-carousel .carousel .carousel-item img {
-  width: 100%;
+  width: 70%;
 }
 .main-section .product-picture-carousel button {
   opacity: 0.8;

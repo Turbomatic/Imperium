@@ -176,10 +176,10 @@ async function send_request(data, request_type, url){
     }
 }
 
-async function buy_item(itemId, quantity){
+async function buy_item(itemId){
     data = {
         'product_id': itemId,
-        'quantity': quantity
+        'quantity': parseInt(document.getElementById('quantity').value)
     };
     const json = await send_request(data, 'single_item', '../server/checkout.php');
     if('error' in json){
@@ -206,3 +206,10 @@ async function buy_cart(){
         window.location.href = json.url;
     }
 }
+
+async function addToCart(id){
+    const json = await send_request({'product_id': id}, 'add_product', '../server/control/updateCart.control.php');
+    if('success' in json){
+        create_notification(json.success);
+    }
+};

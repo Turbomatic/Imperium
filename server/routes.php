@@ -22,8 +22,8 @@ if (!isset($_GET['query0'])) {
     showForgotPassword();
 } else if ($_GET['query0'] === 'change-password' && !isset($_GET['query1'])) {
     showChangePassword();
-} else if ($_GET['query0'] === 'prebuilts' && isset($_GET['query1'])) { //to be compared with a product Id
-    showSpecificProduct();
+} else if ($_GET['query0'] === 'prebuilts' || $_GET['query0'] === 'components' || $_GET['query0'] === 'peripherals' || $_GET['query0'] === 'deals' && isset($_GET['query1'])) { //to be compared with a product Id
+    showSpecificProduct($_GET['query1']);
 } else {
     echo 'url is invalid';
 }
