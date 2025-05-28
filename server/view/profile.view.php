@@ -81,7 +81,7 @@ HTML;
             <img src="{$path}" alt="">
             <img src="{$path}" alt="">
           </div>
-          <button class="add-to-cart" onclick="add_saved_items_to_cart({$item['product_id']})">Add to Cart</button>
+          <button class="add-to-cart" onclick="addToCart({$item['product_id']})">Add to Cart</button>
           <button class="remove-saved" onclick="remove_saved_item({$item['product_id']})">Remove</button>
         </div>
 SAVED;

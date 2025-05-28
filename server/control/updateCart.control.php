@@ -23,10 +23,6 @@ require '../model/Cart.php';
 require '../../config/db.php';
 
 $userId = $_SESSION['user_id'] ?? null;
-if (!$userId) {
-    http_response_code(401);
-    exit;
-}
 
 $cart = new Cart($conn, $userId);
 
@@ -62,6 +58,10 @@ function removeItem($cart, $userId, $postData)
 function addProductToCart($cart, $userId, $postData)
 {
 
+    if(!$userId){
+        echo json_encode(['login'=>'Must logged in!']);
+        return;
+    }
     if (!isset($postData['product_id'])) {
         http_response_code(400);
         return;
