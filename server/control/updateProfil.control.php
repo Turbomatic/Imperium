@@ -54,7 +54,7 @@ switch ($requestType) {
 
 if (!$userId) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+    echo json_encode(['login' => false, 'message' => 'Unauthorized']);
     exit;
 }
 
@@ -161,7 +161,7 @@ function addSavedItem($user, $userId, $postData)
 {
     $error = '';
 
-    $productId = $postData['productId'] ?? null;
+    $productId = $postData['product_id'] ?? null;
     if (!$productId) {
         http_response_code(400);
         $error = 'Product ID is required';
@@ -173,7 +173,7 @@ function addSavedItem($user, $userId, $postData)
         exit;
     }
 
-    $success = $user->addSavedItem($userId, $productId);
+    $success = $user->addProductToSavedItems($userId, $productId);
 
     if (!$success) {
         http_response_code(500);
