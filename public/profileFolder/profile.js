@@ -193,6 +193,6 @@ async function add_saved_items_to_cart(productId) {
     create_notification("Added successfully!");
     goTo("/imperium/public/profile");
   } else {
-    create_notification(json?.error || "Failed to add.");
+    create_notification(json?.error || "Failed to add.");
   }
 }

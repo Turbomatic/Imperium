@@ -64,6 +64,7 @@ function addProductToCart($cart, $userId, $postData)
 
     if (!isset($postData['productId'])) {
         http_response_code(400);
+        error_log("Product ID not set in POST data");
         return;
     }
 
