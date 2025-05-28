@@ -252,4 +252,11 @@ class User
         $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
         return $stmt->execute();
     }
+    public function addProductToSavedItems($userId, $productId)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO saved_items (user_id, product_id, saved_at) VALUES (:userId, :productId, NOW())");
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':productId', $productId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
 }

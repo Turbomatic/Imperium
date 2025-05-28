@@ -43,6 +43,9 @@ switch ($requestType) {
         deleteAccount($user, $userId);
         destroySession();
         break;
+    case 'add_saved_item':
+        addSavedItem($user, $userId, $postData);
+        break;
     default:
         http_response_code(400);
         echo json_encode(['success' => 'Unknown request type']);
@@ -118,7 +121,7 @@ function removeItem($user, $userId, $postData)
 {
     $error = '';
 
-    $itemId = $postData['itemId'] ?? null;
+    $itemId = $postData['productId'] ?? null;
     if (!$itemId) {
         http_response_code(400);
 
@@ -152,6 +155,32 @@ function deleteAccount($user, $userId)
     } else {
         destroySession();
         echo json_encode(['success' => 'Account deleted successfully']);
+    }
+}
+function addSavedItem($user, $userId, $postData)
+{
+    $error = '';
+
+    $productId = $postData['productId'] ?? null;
+    if (!$productId) {
+        http_response_code(400);
+        $error = 'Product ID is required';
+        return;
+    }
+
+    if (!empty($error)) {
+        echo json_encode($error);
+        exit;
+    }
+
+    $success = $user->addSavedItem($userId, $productId);
+
+    if (!$success) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to add item']);
+    } else {
+        http_response_code(200);
+        echo json_encode(['success' => 'Item added successfully']);
     }
 }
 

@@ -35,7 +35,7 @@ function display_profile(array $userData, array $historyItems, array $savedItems
 HTML;
 
   foreach ($historyItems as $order) {
-    $path = substr($order['image_url'], 16);//imperium/public/
+    $path = substr($order['image_url'] ?? '', 16); //imperium/public/
     echo <<<ORDER
         <li class="item-card">
           <div class="order-item">
@@ -68,7 +68,7 @@ ORDER;
 HTML;
 
   foreach ($savedItems as $item) {
-    $path = substr($item['image_url'], 16);//imperium/public/ --removed
+    $path = substr($order['image_url'] ?? '', 16); //imperium/public/ --removed
     echo <<<SAVED
         <div class="item-card">
           <div class="saved-img">
@@ -81,7 +81,7 @@ HTML;
             <img src="{$path}" alt="">
             <img src="{$path}" alt="">
           </div>
-          <button class="add-to-cart">Add to Cart</button>
+          <button class="add-to-cart" onclick="add_saved_items_to_cart({$item['product_id']})">Add to Cart</button>
           <button class="remove-saved" onclick="remove_saved_item({$item['product_id']})">Remove</button>
         </div>
 SAVED;

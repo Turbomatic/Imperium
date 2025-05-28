@@ -641,23 +641,25 @@ footer .policy {
   padding: 10px;
   border-radius: 20px;
   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.5);
-  transform: translate(-20rem);
+  transform: translate(-40rem);
   text-align: center;
   animation: noti_slide 5s linear;
 }
 
 @keyframes noti_slide {
   0% {
-    transform: translateX(-20rem);
+    transform: translateX(-40rem);
   }
   10% {
     transform: translateX(0rem);
   }
-  90% {
+  80% {
     transform: translateX(0rem);
   }
+  99% {
+    transform: translateX(-40rem);
+  }
   100% {
-    transform: translateX(-20rem);
-    display: none;
+    transform: translateX(-40rem);
   }
 }/*# sourceMappingURL=global.css.map */

@@ -17,10 +17,33 @@ class Product
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getProductsByFilters($filterQuery)
+   
+    public function getProductById($id){
+        $stmt = $this->conn->prepare("SELECT * FROM products WHERE id = :id;");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getProductsByFilters($joinQuery, $filterQuery)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM products". $filterQuery);
+        $stmt = $this->conn->prepare("SELECT * FROM products". $joinQuery . $filterQuery);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTableName($subcategory)
+    {
+        $tableName = '';
+        if ($subcategory == 'mouse') $tableName = 'mice';
+        else $tableName = strtolower($subcategory). 's';
+
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM products JOIN ".$tableName);
+            if ($stmt->execute()) return $tableName;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return null;
     }
 }

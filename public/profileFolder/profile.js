@@ -154,9 +154,9 @@ async function delete_account() {
     create_notification(json?.error || "Failed to delete.");
   }
 }
-async function remove_saved_item(itemId) {
+async function remove_saved_item(productId) {
   const json = await send_request(
-    { itemId },
+    { productId },
     "remove_item",
     "../server/control/updateProfil.control.php"
   );
@@ -166,5 +166,33 @@ async function remove_saved_item(itemId) {
     goTo("/imperium/public/profile");
   } else {
     create_notification(json?.error || "Failed to remove.");
+  }
+}
+async function removeFromCart(itemId) {
+  const json = await send_request(
+    { itemId },
+    "remove_item",
+    "../server/control/updateCart.control.php"
+  );
+
+  if (json?.success) {
+    create_notification("Removed successfully!");
+    goTo("/imperium/public/cart");
+  } else {
+    create_notification(json?.error || "Failed to remove.");
+  }
+}
+async function add_saved_items_to_cart(productId) {
+  const json = await send_request(
+    { productId },
+    "add_product",
+    "../server/control/updateCart.control.php"
+  );
+
+  if (json?.success) {
+    create_notification("Added successfully!");
+    goTo("/imperium/public/profile");
+  } else {
+    create_notification(json?.error || "Failed to add.");
   }
 }
