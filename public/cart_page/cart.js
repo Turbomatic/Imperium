@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    loadCart();
+    //loadCart();
 
     // Delegate remove button click
     document.querySelector('.cart-container')?.addEventListener('click', async (e) => {
