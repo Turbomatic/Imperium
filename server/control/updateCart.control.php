@@ -1,6 +1,6 @@
 <?php
 
-require_once "../config/session.php";
+require_once "../../config/session.php";
 
 startSession();
 
@@ -19,8 +19,8 @@ if (!$requestType) {
     exit;
 }
 
-require './model/Cart.php';
-require '../config/db.php';
+require '../model/Cart.php';
+require '../../config/db.php';
 
 $userId = $_SESSION['user_id'] ?? null;
 if (!$userId) {

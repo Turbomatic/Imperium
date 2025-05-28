@@ -20,8 +20,8 @@ if (!$requestType) {
 }
 
 include 'helper.control.php';
-require './model/User.php';
-require '../config/db.php';
+require '../model/User.php';
+require '../../config/db.php';
 
 $user = new User($conn);
 $userId = $_SESSION['user_id'] ?? null;

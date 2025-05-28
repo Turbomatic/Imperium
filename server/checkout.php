@@ -2,8 +2,8 @@
 if ($_SERVER['REQUEST_METHOD'] != 'POST') exit();
 require '../config/session.php';
 startSession();
-if(!isset($_SESSION['user_id'])){
-  echo json_encode(['login'=>'Session is closed']);
+if (!isset($_SESSION['user_id'])) {
+  echo json_encode(['login' => 'Session is closed']);
   exit();
 }
 $userId = $_SESSION['user_id'];
@@ -19,7 +19,7 @@ $products = [];
 switch ($requestType) {
   case 'single_item':
     if (!isset($post_data['product_id']) || !isset($post_data['quantity'])) {
-      echo json_encode(['error'=>'Purchase was not processed!']);
+      echo json_encode(['error' => 'Purchase was not processed!']);
       exit();
     }
     $products[0] = getProduct($post_data['product_id'], $post_data['quantity']);
@@ -37,16 +37,16 @@ switch ($requestType) {
 }
 
 foreach ($products as $product) {
-    $line_items[] = [
-        'price_data' => [
-            'currency' => 'eur',
-            'unit_amount' => $product['price'] * 100, // must be in cents
-            'product_data' => [
-                'name' => $product['product_name'],
-            ]
-        ],
-        'quantity' => $product['quantity'],
-    ];
+  $line_items[] = [
+    'price_data' => [
+      'currency' => 'eur',
+      'unit_amount' => $product['price'] * 100, // must be in cents
+      'product_data' => [
+        'name' => $product['product_name'],
+      ]
+    ],
+    'quantity' => $product['quantity'],
+  ];
 }
 
 
@@ -63,10 +63,10 @@ $checkout_session = \Stripe\Checkout\Session::create([
   'mode' => 'payment',
   'success_url' => $YOUR_DOMAIN . '/public/',
   'cancel_url' => $YOUR_DOMAIN . '/public/',
-    'metadata' => [
-      'user_id' => $userId,
-      'product_ids' => implode(',', array_column($products, 'product_id')),
+  'metadata' => [
+    'user_id' => $userId,
+    'product_ids' => implode(',', array_column($products, 'product_id')),
   ],
 ]);
 
-echo json_encode(['url'=> $checkout_session->url]);
+echo json_encode(['url' => $checkout_session->url]);
