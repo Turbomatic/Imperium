@@ -68,7 +68,7 @@ ORDER;
 HTML;
 
   foreach ($savedItems as $item) {
-    $path = substr($order['image_url'] ?? '', 16); //imperium/public/ --removed
+    $path = substr($item['image_url'] ?? '', 16); //imperium/public/ --removed
     echo <<<SAVED
         <div class="item-card">
           <div class="saved-img">
