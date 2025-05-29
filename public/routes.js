@@ -75,8 +75,8 @@ async function eventGoTo(event, url){
     event.preventDefault();
     await goTo(url);
 }
-let PAGE_NUMBER = 1;
-async function filterGoTo() {
+
+async function filterGoTo(page) {
     let sort = document.getElementById('sort').value;
     let order = document.getElementById('order').value;
     
@@ -84,7 +84,7 @@ async function filterGoTo() {
     let max_price = document.getElementById('max').value;
     
     let filters = {
-        'page': PAGE_NUMBER,
+        'page': page ?? 1,
         'sort': sort,
         'order': order,
         'min_price': min_price,
@@ -101,4 +101,18 @@ async function filterGoTo() {
 
     let encoded_filters = encodeURIComponent(JSON.stringify(filters));
     await goTo(window.location.pathname + '?filters='+ encoded_filters);
+}
+
+function pageBack(){
+    let page = parseInt(document.getElementById('page_nr').innerHTML);
+    if (page <= 1) {
+        return;
+    }
+    page --;
+    filterGoTo(page);
+}
+function pageForward(){
+    let page = parseInt(document.getElementById('page_nr').innerHTML);
+    page ++;
+    filterGoTo(page);
 }

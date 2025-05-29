@@ -1,6 +1,11 @@
 <?php
 
-function display_products($items, $newfilters){
+function display_products($items, $newfilters, $oldFilters){
+    $price_min = $oldFilters['min_price'] ?? 0;
+    $price_max = $oldFilters['max_price'] ?? 2000;
+
+    $min_range = $price_min/2000 * 100;
+    $max_range = $price_max/2000  * 100;
 echo <<<HTML
         <div class="main">
             <div class="filter-panel" id="filter_panel">
@@ -13,14 +18,14 @@ echo <<<HTML
                     <legend>Price (ALL)</legend>
                     <label for="min">Min Price</label>
                     <div class="price-item">
-                        <input type="number" id="min" value="0" onchange="update_value('number'); filterGoTo()">
-                        <input type="range" id="min-range" value="0" onchange="update_value('range'); filterGoTo()">
+                        <input type="number" id="min" value="{$price_min}" onchange="update_value('number'); filterGoTo()">
+                        <input type="range" id="min-range" value="{$min_range}" onchange="update_value('range'); filterGoTo()">
                     </div>
 
                     <label for="max">Max Price</label>
                     <div class="price-item">
-                        <input type="number" id="max" value="200000" onchange="update_value('number'); filterGoTo()">
-                        <input type="range" id="max-range" value="100" onchange="update_value('range'); filterGoTo()">
+                        <input type="number" id="max" value="{$price_max}" onchange="update_value('number'); filterGoTo()">
+                        <input type="range" id="max-range" value="{$max_range}" onchange="update_value('range'); filterGoTo()">
                     </div>
                     <button class="filter-button" onclick="filterGoTo()">Filter</button>
                 </fieldset>
@@ -34,9 +39,16 @@ HTML;
                         FILTER;
 
                         foreach($filterOptions as $index=>$option){
+                            if(in_array($option, $oldFilters)){
                             echo <<<FILTER
-                            <label><input type="radio" name="$filterName" id="option_1" value="$option"> $option</label>
+                            <label><input type="radio" name="$filterName" id="option_1" value="$option" checked> $option</label>
                             FILTER;
+                            }
+                            else{
+                                echo <<<FILTER
+                                <label><input type="radio" name="$filterName" id="option_1" value="$option"> $option</label>
+                                FILTER;
+                            }
                         }
                         echo <<<FILTER
                         </fieldset>
@@ -55,22 +67,31 @@ echo <<<HTML
                     </div>
                     <div class="right">
                         <label for="sort">Sort by : </label>
+HTML;
+                    $sort = ['popularity'=>null, 'date'=>null, 'price'=>null, 'rating'=>null];
+                    $sort[$oldFilters['sort']] = 'selected';
+                        echo <<<ITEM
                         <select name="sort" id="sort" onchange="filterGoTo()">
-                            <option value="popularity">Popularity 🔥</option>
-                            <option value="date">Date 📅</option>
-                            <option value="price">Price 🏷️</option>
-                            <option value="rating">Rating ⭐</option>
+                            <option value="popularity" {$sort['popularity']}>Popularity 🔥</option>
+                            <option value="date" {$sort['date']}>Date 📅</option>
+                            <option value="price" {$sort['price']}>Price 🏷️</option>
+                            <option value="rating" {$sort['rating']}>Rating ⭐</option>
                         </select>
+ITEM;
+                    $order = ['ascending'=>null, 'descending'=>null];
+                    $order[$oldFilters['order']] = 'selected';
+echo <<<ITEM
+
                         <label for="order">Order : </label>
                         <select name="order" id="order" onchange="filterGoTo()">
-                            <option value="descending">Descending ▼</option>
-                            <option value="ascending">Ascending ▲</option>
+                            <option value="descending" {$order['descending']}>Descending ▼</option>
+                            <option value="ascending" {$order['ascending']}>Ascending ▲</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="cards displace-hide animate-in">
-HTML;           
+ITEM;           
             if($items){
                 foreach($items as $index=>$item){
                     $url = substr($item['image_url'], 16);//imperium/public/
@@ -120,11 +141,11 @@ echo <<<HTML
 
                 <div class="page-controls">
                     <div class="button-group">
-                        <button class="circle-button">
+                        <button class="circle-button" onclick="pageBack()">
                             <svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.9991 19L9.83911 14C9.56672 13.7429 9.34974 13.433 9.20142 13.0891C9.0531 12.7452 8.97656 12.3745 8.97656 12C8.97656 11.6255 9.0531 11.2548 9.20142 10.9109C9.34974 10.567 9.56672 10.2571 9.83911 10L14.9991 5" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                         </button>
-                        <span id="page_nr">1</span>
-                        <button class="circle-button">
+                        <span id="page_nr">{$oldFilters['page']}</span>
+                        <button class="circle-button" onclick="pageForward()">
                             <svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M9 5L14.15 10C14.4237 10.2563 14.6419 10.5659 14.791 10.9099C14.9402 11.2539 15.0171 11.625 15.0171 12C15.0171 12.375 14.9402 12.7458 14.791 13.0898C14.6419 13.4339 14.4237 13.7437 14.15 14L9 19" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                         </button>
                     </div>

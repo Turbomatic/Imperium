@@ -45,9 +45,9 @@ function showProducts($filters, $category)
     if ($filters) {
         $filters = json_decode($filters, true);
         $filters['category'] = $category;
-    } else $filters = ['category' => $category, 'page' => 1, 'sort' => 'popularity', 'order' => 'descending', 'min_price' => 0, 'max_price' => 200000];
+    } else $filters = ['category' => $category, 'page' => 1, 'sort' => 'popularity', 'order' => 'descending', 'min_price' => 0, 'max_price' => 2000];
     $data = getProducts($filters);
-    display_products($data['products'], $data['newFilters']);
+    display_products($data['products'], $data['newFilters'], $data['oldFilters']);
 }
 function showSpecificProduct($product_id)
 {

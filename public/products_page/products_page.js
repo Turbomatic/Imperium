@@ -1,5 +1,5 @@
 //slider values for the filters
-const MAX_PRICE = 200000;
+const MAX_PRICE = 2000;
 const MIN_PRICE = 0;
 
 function update_value(changed_element){
