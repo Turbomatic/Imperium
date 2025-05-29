@@ -159,6 +159,10 @@ function deleteAccount($user, $userId)
 }
 function addSavedItem($user, $userId, $postData)
 {
+    if(!$userId){
+        echo json_encode(['login'=>'Must log in!']);
+        exit();
+    }
     $error = '';
 
     $productId = $postData['product_id'] ?? null;

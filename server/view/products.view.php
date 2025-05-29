@@ -1,6 +1,6 @@
 <?php
 
-function display_products($items){
+function display_products($items, $newfilters){
 echo <<<HTML
         <div class="main">
             <div class="filter-panel" id="filter_panel">
@@ -24,24 +24,26 @@ echo <<<HTML
                     </div>
                     <button class="filter-button" onclick="filterGoTo()">Filter</button>
                 </fieldset>
+HTML; 
 
-                <!--Changes for different categories-->
-                <fieldset class="radio_filter" data-name="filter-choice" onchange="filterGoTo()">
-                    <legend>Filter name</legend>
-                    <label><input type="radio" name="filter-choice" id="option_1" value="1"> Option 1</label>
-                    <label><input type="radio" name="filter-choice" id="option_2" value="2"> Option 2</label>
-                    <label><input type="radio" name="filter-choice" id="option_3" value="3"> Option 3</label>
-                    <label><input type="radio" name="filter-choice" id="option_4" value="4"> Option 4</label>
-                </fieldset>
-                
-                <!--Changes for different categories-->
-                <fieldset class="radio_filter" data-name="filter-choice-second" onchange="filterGoTo()">
-                    <legend>Filter name</legend>
-                    <label><input type="radio" name="filter-choice-second" id="option_1" value="1"> Option 1</label>
-                    <label><input type="radio" name="filter-choice-second" id="option_2" value="2"> Option 2</label>
-                    <label><input type="radio" name="filter-choice-second" id="option_3" value="3"> Option 3</label>
-                    <label><input type="radio" name="filter-choice-second" id="option_4" value="4"> Option 4</label>
-                </fieldset>
+                if($newfilters){
+                    foreach($newfilters as $filterName=>$filterOptions){
+                        echo <<<FILTER
+                        <fieldset class="radio_filter" data-name="$filterName" onchange="filterGoTo()">
+                        <legend>$filterName</legend>
+                        FILTER;
+
+                        foreach($filterOptions as $index=>$option){
+                            echo <<<FILTER
+                            <label><input type="radio" name="$filterName" id="option_1" value="$option"> $option</label>
+                            FILTER;
+                        }
+                        echo <<<FILTER
+                        </fieldset>
+                        FILTER;
+                    }
+                }
+echo <<<HTML
             </div>
 
             <div class="content-panel">
