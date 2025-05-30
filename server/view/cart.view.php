@@ -4,7 +4,7 @@ function display_cart(array $cartItems)
   $total = 0;
 
   echo <<<HTML
-<div class="cart-page">
+<div class="cart-page displace-hide animate-in">
   <h2 class="cart-title">Your Shopping Cart</h2>
   <div class="cart-container">
 HTML;
