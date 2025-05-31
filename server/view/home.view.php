@@ -51,7 +51,7 @@ echo <<<HTML
             <div class="category-wrapper">
 
                 <div class="category-item">
-                    <a href="/imperium/public/prebuilts" onclick="goToEvent(event, '/imperium/public/prebuilts')">
+                    <a href="/imperium/public/prebuilts" onclick="eventGoTo(event, '/imperium/public/prebuilts')">
                         <div class="background" style="background-image: url(assets/pictures/pc-background.png);"></div>
                         <div class="foreground">
                             <span class="upper-bold">PREBUILT PCs</span>
@@ -59,7 +59,7 @@ echo <<<HTML
                     </a>
                 </div>
                 <div class="category-item">
-                    <a href="/imperium/public/components" onclick="goToEvent(event, '/imperium/public/components')">
+                    <a href="/imperium/public/components" onclick="eventGoTo(event, '/imperium/public/components')">
                         <div class="background" style="background-image: url(assets/pictures/components-background.png);"></div>
                         <div class="foreground">
                             <span class="upper-bold">COMPONENTS</span>
@@ -67,7 +67,7 @@ echo <<<HTML
                     </a>
                 </div>
                 <div class="category-item">
-                    <a href="/imperium/public/peripherals" onclick="goToEvent(event, '/imperium/public/peripherals')">
+                    <a href="/imperium/public/peripherals" onclick="eventGoTo(event, '/imperium/public/peripherals')">
                         <div class="background" style="background-image: url(assets/pictures/peripherals-background.png);"></div>
                         <div class="foreground">
                             <span class="upper-bold">PERIPHERALS</span>
@@ -75,7 +75,7 @@ echo <<<HTML
                     </a>
                 </div>
                 <div class="category-item">
-                    <a href="/imperium/public/deals" onclick="goToEvent(event, '/imperium/public/deals')">
+                    <a href="/imperium/public/deals" onclick="eventGoTo(event, '/imperium/public/')">
                         <div class="background" style="background-image: url(assets/pictures/deals-background.png);"></div>
                         <div class="foreground">
                             <span class="upper-bold">DEALS</span>

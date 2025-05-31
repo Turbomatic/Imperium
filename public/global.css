@@ -13,6 +13,21 @@
   --purple-highlight: #d17cff;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-blue: rgb(199, 221, 235);
+    --nav-background: rgb(176, 223, 230, 0.3);
+    --nav-border: rgba(233, 232, 232, 0.258);
+    --nav-button-shadow: rgb(126, 173, 180, 0.7);
+    --lavander-background: #430b6e5e;
+    --pink-blue-background: rgb(49, 25, 44);
+    --blue-mist-background: rgb(25, 40, 49);
+    --peach-cream-background: rgb(49, 41, 25);
+    --body-background: #2b3134;
+    --purple-accent: #9a37d1;
+    --purple-highlight: #c278ea;
+  }
+}
 * {
   -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
@@ -127,7 +142,7 @@ h3 {
   box-sizing: border-box;
   background-color: var(--purple-accent);
   border: 2px solid var(--purple-highlight);
-  color: var(--lavander-background);
+  color: inherit;
   font-weight: bold;
   font-size: 1.5rem;
   border-radius: 1rem;
@@ -176,6 +191,11 @@ h3 {
   100% {
     opacity: 0;
     left: 90%;
+  }
+}
+@media (prefers-color-scheme: light) {
+  .cto-button {
+    color: var(--lavander-background);
   }
 }
 
@@ -311,7 +331,7 @@ nav .right-button-group, .hamburger .right-button-group {
 }
 
 .hamburger {
-  top: 12%;
+  top: 80px;
   left: 2%;
   height: -moz-fit-content;
   height: fit-content;

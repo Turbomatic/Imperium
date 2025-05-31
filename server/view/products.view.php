@@ -1,11 +1,12 @@
 <?php
 
 function display_products($items, $newfilters, $oldFilters){
+    $MAX_PRICE = 5000;
     $price_min = $oldFilters['min_price'] ?? 0;
-    $price_max = $oldFilters['max_price'] ?? 2000;
+    $price_max = $oldFilters['max_price'] ?? $MAX_PRICE;
 
-    $min_range = $price_min/2000 * 100;
-    $max_range = $price_max/2000  * 100;
+    $min_range = $price_min/$MAX_PRICE * 100;
+    $max_range = $price_max/$MAX_PRICE  * 100;
 echo <<<HTML
         <div class="main">
             <div class="filter-panel" id="filter_panel">
@@ -15,7 +16,7 @@ echo <<<HTML
                 </div>  
                 <!--Same for evry category-->
                 <fieldset class="price">
-                    <legend>Price (ALL)</legend>
+                    <legend>Price (€)</legend>
                     <label for="min">Min Price</label>
                     <div class="price-item">
                         <input type="number" id="min" value="{$price_min}" onchange="update_value('number'); filterGoTo()">

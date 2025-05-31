@@ -1,7 +1,7 @@
 <?php
 function display_about_us(){
     echo <<<HTML
-    <main class="about-page">
+    <main class="about-page displace-hide animate-in">
     <section class="about-section">
       <h1 class="section-title">Rreth Kompanisë</h1>
       <p class="about-text">

@@ -37,9 +37,9 @@
   padding: 3rem;
   border-radius: 30px;
   box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.6);
-  background-color: rgba(255, 255, 255, 0.7);
-  -webkit-backdrop-filter: blur(5px);
-          backdrop-filter: blur(5px);
+  background-color: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
 }
 .content .container .left .form-container form h2, .content .container .right .form-container form h2 {
   text-align: center;
@@ -69,7 +69,7 @@
   font-size: larger;
   font-weight: bolder;
   background-color: var(--text-blue);
-  color: white;
+  color: var(--body-background);
   cursor: pointer;
 }
 .content .container .left .form-container form .button-container .gsi-material-button, .content .container .right .form-container form .button-container .gsi-material-button {

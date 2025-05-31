@@ -46,7 +46,7 @@ function showProducts($filters, $category)
         $filters = json_decode($filters, true);
         $filters['category'] = $category;
     }
-    else $filters = ['category' => $category, 'page' => 1, 'sort' => 'popularity', 'order' => 'descending', 'min_price' => 0, 'max_price' => 2000];
+    else $filters = ['category' => $category, 'page' => 1, 'sort' => 'popularity', 'order' => 'descending', 'min_price' => 0, 'max_price' => 5000];
     $data = getProducts($filters);
     display_products($data['products'], $data['newFilters'], $data['oldFilters']);
 }
