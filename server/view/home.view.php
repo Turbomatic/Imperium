@@ -75,7 +75,7 @@ echo <<<HTML
                     </a>
                 </div>
                 <div class="category-item">
-                    <a href="/imperium/public/deals" onclick="goToEvent(event, '/imperium/public/deals')">
+                    <a href="/imperium/public/deals" onclick="goToEvent(event, '/imperium/public/')">
                         <div class="background" style="background-image: url(assets/pictures/deals-background.png);"></div>
                         <div class="foreground">
                             <span class="upper-bold">DEALS</span>
