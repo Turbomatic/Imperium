@@ -3,6 +3,8 @@ require_once  '../vendor/autoload.php';
 require_once '../config/google.config.php';
 require_once './model/User.php';
 
+use Google\Service\Oauth2;
+
 session_start();
 
 $client = new Google_Client();
@@ -15,7 +17,7 @@ if (isset($_GET['code'])) {
     $client->setAccessToken($token);
 
     // Get profile info
-    $oauth =  new Google_Service_Oauth2($client);
+    $oauth =  new Oauth2($client);
     $profile = $oauth->userinfo->get();
 
 

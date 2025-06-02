@@ -182,7 +182,7 @@ async function removeFromCart(itemId) {
     create_notification(json?.error || "Failed to remove.");
   }
 }
-async function add_saved_items_to_cart(productId) {
+async function add_to_cart(productId) {
   const json = await send_request(
     { productId },
     "add_product",
